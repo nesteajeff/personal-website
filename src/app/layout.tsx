@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { NowPlayingProvider } from "../components/NowPlayingProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Jeffrey Peng — Data Scientist",
+  title: "Jeffrey Peng | Data Scientist",
   description:
     "Spotify-themed portfolio featuring projects, experience, and contact details.",
   icons: {
@@ -35,7 +36,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <NowPlayingProvider>{children}</NowPlayingProvider>
       </body>
     </html>
   );

@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import type { ChangeEvent, MouseEvent } from "react";
+import { useMemo, useRef } from "react";
+import { useNowPlaying } from "../../components/NowPlayingProvider";
 
 const projects = [
   {
@@ -22,93 +25,41 @@ const projects = [
 ];
 
 export default function ProjectsPage() {
-  const [playingIndex, setPlayingIndex] = useState<number | null>(null);
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(0.6);
-  const [isLooping, setIsLooping] = useState(false);
-  const [isShuffling, setIsShuffling] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const queueKey = "projects";
+  const projectsQueue = useMemo(
+    () =>
+      projects.map((item, index) => ({
+        id: `${item.title}-${index}`,
+        title: item.title,
+        subtitle: "Sleepy Fish, Philanthrope",
+        coverSrc: "/jeffrey.png",
+        audioSrc: "/sleepy_fish_away_with_the_fairies.mp3",
+      })),
+    []
+  );
+  const {
+    queueKey: activeQueueKey,
+    queue: activeQueue,
+    currentIndex,
+    isPlaying,
+    currentTime,
+    duration,
+    volume,
+    isLooping,
+    isShuffling,
+    currentItem,
+    toggle,
+    next,
+    prev,
+    seekTo,
+    setVolume,
+    toggleLoop,
+    toggleShuffle,
+  } = useNowPlaying();
   const progressRef = useRef<HTMLDivElement | null>(null);
 
-  const ensureAudio = () => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio("/sleepy_fish_away_with_the_fairies.mp3");
-      audioRef.current.loop = isLooping;
-      audioRef.current.volume = volume;
-      audioRef.current.addEventListener("timeupdate", () => {
-        if (audioRef.current) {
-          setCurrentTime(audioRef.current.currentTime);
-        }
-      });
-      audioRef.current.addEventListener("loadedmetadata", () => {
-        if (audioRef.current) {
-          setDuration(audioRef.current.duration || 0);
-        }
-      });
-      audioRef.current.addEventListener("ended", () => {
-        if (!audioRef.current) {
-          return;
-        }
-        if (audioRef.current.loop) {
-          audioRef.current.currentTime = 0;
-          audioRef.current.play().catch(() => undefined);
-        } else {
-          handleNext();
-        }
-      });
-    }
-  };
-
-  const stopAudio = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
-    setPlayingIndex(null);
-  };
-
-  const playTrack = (index: number) => {
-    ensureAudio();
-    if (!audioRef.current) {
-      return;
-    }
-    audioRef.current.currentTime = 0;
-    audioRef.current.loop = isLooping;
-    audioRef.current.volume = volume;
-    audioRef.current
-      .play()
-      .then(() => {
-        setCurrentTrackIndex(index);
-        setPlayingIndex(index);
-      })
-      .catch(() => setPlayingIndex(null));
-  };
-
-  const toggleTrack = (index: number) => {
-    if (playingIndex === index) {
-      stopAudio();
-      return;
-    }
-    playTrack(index);
-  };
-
-  const handlePrev = () => {
-    const nextIndex = isShuffling
-      ? Math.floor(Math.random() * projects.length)
-      : (currentTrackIndex - 1 + projects.length) % projects.length;
-    playTrack(nextIndex);
-  };
-
-  const handleNext = () => {
-    const nextIndex = isShuffling
-      ? Math.floor(Math.random() * projects.length)
-      : (currentTrackIndex + 1) % projects.length;
-    playTrack(nextIndex);
-  };
-
-  const handleSeek = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!audioRef.current || !duration || !progressRef.current) {
+  const handleSeek = (event: MouseEvent<HTMLDivElement>) => {
+    if (!duration || !progressRef.current) {
       return;
     }
     const rect = progressRef.current.getBoundingClientRect();
@@ -116,28 +67,21 @@ export default function ProjectsPage() {
       Math.max((event.clientX - rect.left) / rect.width, 0),
       1
     );
-    audioRef.current.currentTime = percent * duration;
-    setCurrentTime(audioRef.current.currentTime);
+    seekTo(percent * duration);
   };
 
-  const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const nextVolume = Number(event.target.value);
-    setVolume(nextVolume);
-    if (audioRef.current) {
-      audioRef.current.volume = nextVolume;
+  const handleVolumeChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setVolume(Number(event.target.value));
+  };
+  const nowPlayingItem = currentItem;
+  const isActiveQueue = activeQueueKey === queueKey;
+  const hasNowPlaying = Boolean(currentItem);
+  const handleGlobalToggle = () => {
+    if (activeQueueKey && activeQueue.length) {
+      toggle(activeQueueKey, activeQueue, currentIndex);
+      return;
     }
-  };
-
-  const toggleLoop = () => {
-    const nextLoop = !isLooping;
-    setIsLooping(nextLoop);
-    if (audioRef.current) {
-      audioRef.current.loop = nextLoop;
-    }
-  };
-
-  const toggleShuffle = () => {
-    setIsShuffling((prev) => !prev);
+    toggle(queueKey, projectsQueue, 0);
   };
 
   const formatTime = (value: number) => {
@@ -146,30 +90,44 @@ export default function ProjectsPage() {
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
-  useEffect(() => {
-    return () => {
-      stopAudio();
-    };
-  }, []);
-
   return (
-    <div className="spotify-shell">
-      <aside className="spotify-sidebar">
-        <div className="spotify-brand">Portfolio</div>
-        <nav>
-          <a href="/">Home</a>
-          <a href="/experience">Experience</a>
-          <a href="/projects" aria-current="page">
-            Projects
-          </a>
-        </nav>
-      </aside>
+    <div className="spotify-layout">
+      <input
+        className="spotify-sidebar-toggle"
+        type="checkbox"
+        id="spotify-sidebar-toggle"
+      />
+      <label
+        className="spotify-sidebar-toggle-button"
+        htmlFor="spotify-sidebar-toggle"
+        aria-label="Toggle navigation"
+      >
+        <span aria-hidden="true" />
+        <span aria-hidden="true" />
+        <span aria-hidden="true" />
+      </label>
+      <label
+        className="spotify-sidebar-overlay"
+        htmlFor="spotify-sidebar-toggle"
+        aria-hidden="true"
+      />
+      <div className="spotify-shell">
+        <aside className="spotify-sidebar">
+          <div className="spotify-brand">Portfolio</div>
+          <nav>
+            <Link href="/">Home</Link>
+            <Link href="/experience">Experience</Link>
+            <Link href="/projects" aria-current="page">
+              Projects
+            </Link>
+          </nav>
+        </aside>
 
       <main className="spotify-content spotify-content-immersive spotify-has-bars">
         <div className="spotify-topbar spotify-fixed-top">
-          <a className="spotify-top-logo" href="/" aria-label="Home">
+          <Link className="spotify-top-logo" href="/" aria-label="Home">
             <img src="/jeffrey.png" alt="Jeffrey Peng" />
-          </a>
+          </Link>
           <div className="spotify-top-actions">
             <a
               className="spotify-top-icon"
@@ -236,9 +194,9 @@ export default function ProjectsPage() {
             <button
               type="button"
               className="spotify-main-play"
-              onClick={() => toggleTrack(0)}
+              onClick={() => toggle(queueKey, projectsQueue, 0)}
             >
-              {playingIndex === 0 ? "Pause" : "Play"}
+              {isActiveQueue && currentIndex === 0 && isPlaying ? "Pause" : "Play"}
             </button>
           </div>
         </header>
@@ -267,9 +225,9 @@ export default function ProjectsPage() {
                 <button
                   type="button"
                   className="spotify-play-button"
-                  onClick={() => toggleTrack(index)}
+                  onClick={() => toggle(queueKey, projectsQueue, index)}
                 >
-                  {playingIndex === index ? "Pause" : "Play"}
+                  {isActiveQueue && currentIndex === index && isPlaying ? "Pause" : "Play"}
                 </button>
               </div>
             </article>
@@ -277,18 +235,33 @@ export default function ProjectsPage() {
         </section>
         <footer className="spotify-now-playing spotify-fixed-bottom">
           <div className="spotify-now-left">
-            <div className="spotify-now-cover">
-              <img src="/jeffrey.png" alt="Jeffrey Peng" />
-            </div>
-            <div>
-              <p className="spotify-now-title">
-                {projects[currentTrackIndex]?.title ?? "Project track"}
-              </p>
-              <p className="spotify-now-sub">Sleepy Fish, Philanthrope</p>
-            </div>
-            <span className="spotify-now-check" aria-hidden="true">
-              ✓
-            </span>
+            {hasNowPlaying ? (
+              <>
+                <div className="spotify-now-cover">
+                  <img
+                    src={nowPlayingItem?.coverSrc ?? "/jeffrey.png"}
+                    alt={`${nowPlayingItem?.title ?? "Now playing"} cover`}
+                  />
+                </div>
+                <div>
+                  <p className="spotify-now-title">
+                    {nowPlayingItem?.title ?? "Project track"}
+                  </p>
+                  <p className="spotify-now-sub">
+                    {nowPlayingItem?.subtitle ?? "Sleepy Fish, Philanthrope"}
+                  </p>
+                </div>
+                
+              </>
+            ) : (
+              <>
+                <div
+                  className="spotify-now-cover spotify-now-cover-empty"
+                  aria-hidden="true"
+                />
+                <div className="spotify-now-text-empty" aria-hidden="true" />
+              </>
+            )}
           </div>
           <div className="spotify-now-center">
             <div className="spotify-now-controls">
@@ -315,7 +288,7 @@ export default function ProjectsPage() {
                 type="button"
                 aria-label="Previous"
                 className="spotify-icon-button"
-                onClick={handlePrev}
+                onClick={prev}
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M6 5v14M20 6l-10 6 10 6z" fill="currentColor" />
@@ -324,9 +297,10 @@ export default function ProjectsPage() {
               <button
                 type="button"
                 className="spotify-now-play-circle"
-                onClick={() => toggleTrack(currentTrackIndex)}
+                onClick={handleGlobalToggle}
+                disabled={!hasNowPlaying}
               >
-                {playingIndex === currentTrackIndex ? (
+                {isPlaying ? (
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <rect x="7" y="6" width="4" height="12" fill="currentColor" />
                     <rect x="13" y="6" width="4" height="12" fill="currentColor" />
@@ -341,7 +315,7 @@ export default function ProjectsPage() {
                 type="button"
                 aria-label="Next"
                 className="spotify-icon-button"
-                onClick={handleNext}
+                onClick={next}
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M18 5v14M4 6l10 6-10 6z" fill="currentColor" />
@@ -442,6 +416,7 @@ export default function ProjectsPage() {
           </div>
         </footer>
       </main>
+    </div>
     </div>
   );
 }

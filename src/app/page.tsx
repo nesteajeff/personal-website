@@ -1,3 +1,10 @@
+"use client";
+
+import Link from "next/link";
+import type { ChangeEvent, MouseEvent } from "react";
+import { useMemo, useRef } from "react";
+import { useNowPlaying } from "../components/NowPlayingProvider";
+
 const experience = [
   {
     role: "Software Engineer",
@@ -62,31 +69,113 @@ const education = {
 };
 
 export default function Home() {
-  return (
-    <div className="spotify-shell">
-      <aside className="spotify-sidebar">
-        <div className="spotify-brand">Portfolio</div>
-        <nav>
-          <a href="/" aria-current="page">
-            Home
-          </a>
-          <a href="/experience">Experience</a>
-          <a href="/projects">Projects</a>
-        </nav>
-      </aside>
+  const queueKey = "home";
+  const homeQueue = useMemo(
+    () => [
+      {
+        id: "home-track",
+        title: "Now playing",
+        subtitle: "Sleepy Fish, Philanthrope",
+        coverSrc: "/jeffrey.png",
+        audioSrc: "/sleepy_fish_away_with_the_fairies.mp3",
+      },
+    ],
+    []
+  );
+  const {
+    queueKey: activeQueueKey,
+    queue: activeQueue,
+    currentIndex,
+    isPlaying,
+    currentTime,
+    duration,
+    volume,
+    isLooping,
+    isShuffling,
+    currentItem,
+    toggle,
+    next,
+    prev,
+    seekTo,
+    setVolume,
+    toggleLoop,
+    toggleShuffle,
+  } = useNowPlaying();
+  const progressRef = useRef<HTMLDivElement | null>(null);
+  const handleSeek = (event: MouseEvent<HTMLDivElement>) => {
+    if (!duration || !progressRef.current) {
+      return;
+    }
+    const rect = progressRef.current.getBoundingClientRect();
+    const percent = Math.min(
+      Math.max((event.clientX - rect.left) / rect.width, 0),
+      1
+    );
+    seekTo(percent * duration);
+  };
+  const handleVolumeChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setVolume(Number(event.target.value));
+  };
+  const nowPlayingItem = currentItem;
+  const hasNowPlaying = Boolean(currentItem);
+  const handleGlobalToggle = () => {
+    if (activeQueueKey && activeQueue.length) {
+      toggle(activeQueueKey, activeQueue, currentIndex);
+      return;
+    }
+    toggle(queueKey, homeQueue, 0);
+  };
+  const formatTime = (value: number) => {
+    const minutes = Math.floor(value / 60);
+    const seconds = Math.floor(value % 60);
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
 
-      <main className="spotify-content spotify-content-immersive spotify-has-bars">
-        <div className="spotify-topbar spotify-fixed-top">
-          <a className="spotify-top-logo" href="/" aria-label="Home">
-            <img src="/jeffrey.png" alt="Jeffrey Peng" />
-          </a>
-          <div className="spotify-top-actions">
-            <a
-              className="spotify-top-icon"
-              href="mailto:jeffrey.peng@uwaterloo.ca"
-              aria-label="Email"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
+  return (
+    <div className="spotify-layout">
+      <input
+        className="spotify-sidebar-toggle"
+        type="checkbox"
+        id="spotify-sidebar-toggle"
+      />
+      <label
+        className="spotify-sidebar-toggle-button"
+        htmlFor="spotify-sidebar-toggle"
+        aria-label="Toggle navigation"
+      >
+        <span aria-hidden="true" />
+        <span aria-hidden="true" />
+        <span aria-hidden="true" />
+      </label>
+      <label
+        className="spotify-sidebar-overlay"
+        htmlFor="spotify-sidebar-toggle"
+        aria-hidden="true"
+      />
+      <div className="spotify-shell">
+        <aside className="spotify-sidebar">
+          <div className="spotify-brand">Portfolio</div>
+          <nav>
+            <Link href="/" aria-current="page">
+              Home
+            </Link>
+            <Link href="/experience">Experience</Link>
+            <Link href="/projects">Projects</Link>
+          </nav>
+        </aside>
+
+        <main className="spotify-content spotify-content-immersive spotify-has-bars">
+          <div className="spotify-topbar spotify-fixed-top">
+          <Link className="spotify-top-logo" href="/" aria-label="Home">
+              <img src="/jeffrey.png" alt="Jeffrey Peng" />
+          </Link>
+            <div className="spotify-top-actions">
+              <a
+                className="spotify-top-icon"
+                href="mailto:jeffrey.peng@uwaterloo.ca"
+                aria-label="Email"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path
                   d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z"
                   stroke="currentColor"
@@ -135,45 +224,54 @@ export default function Home() {
         </div>
 
         <header className="spotify-header">
-          <div>
-            <h1>Jeffrey Peng</h1>
-            <p className="spotify-lede">
-              Data Scientist
-            </p>
-          </div>
-          <div className="spotify-contact-block">
-            <p>Toronto, ON</p>
-            <p>Open to Summer 2026</p>
-            <a href="mailto:jeffrey.peng@uwaterloo.ca">
-              jeffrey.peng@uwaterloo.ca
-            </a>
-            <a
-              href="https://linkedin.com/in/jmpeng/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              linkedin.com/in/jmpeng/
-            </a>
+          <img
+            className="spotify-hero-avatar"
+            src="/me_with_cow.jpeg"
+            alt="Jeffrey Peng portrait with cow"
+          />
+          <div className="spotify-header-info">
+            <div>
+              <h1 className="spotify-hero-title">
+                Jeffrey <span className="spotify-hero-highlight">Peng</span>
+              </h1>
+              <p className="spotify-lede spotify-hero-subtitle">
+                Data Scientist
+              </p>
+            </div>
+            <div className="spotify-contact-block">
+              <p>University of Waterloo</p>
+              <p>Seeking Summer 2026 Internships</p>
+              <a href="mailto:jeffrey.peng@uwaterloo.ca">
+                jeffrey.peng@uwaterloo.ca
+              </a>
+              <a
+                href="https://linkedin.com/in/jmpeng/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                linkedin.com/in/jmpeng/
+              </a>
+            </div>
           </div>
         </header>
 
         <section className="spotify-section">
           <h2 className="spotify-section-title">Playlists</h2>
           <div className="spotify-playlists">
-            <a className="spotify-playlist-card" href="/experience">
+            <Link className="spotify-playlist-card" href="/experience">
               <div>
                 <h3>Experience</h3>
                 <p>3 tracks</p>
               </div>
               <span className="spotify-play">Play</span>
-            </a>
-            <a className="spotify-playlist-card" href="/projects">
+            </Link>
+            <Link className="spotify-playlist-card" href="/projects">
               <div>
                 <h3>Projects</h3>
                 <p>2 tracks</p>
               </div>
               <span className="spotify-play">Play</span>
-            </a>
+            </Link>
           </div>
         </section>
 
@@ -192,7 +290,7 @@ export default function Home() {
         <section className="spotify-section">
           <h2 className="spotify-section-title">Contact</h2>
           <div className="spotify-contact-card">
-            <p>Open to Summer 2026 · Let&apos;s connect.</p>
+            <p>Seeking Summer 2026 Internships · Let&apos;s connect!</p>
             <div className="spotify-actions">
               <a
                 className="spotify-button spotify-button-primary"
@@ -214,20 +312,42 @@ export default function Home() {
 
         <footer className="spotify-now-playing spotify-fixed-bottom">
           <div className="spotify-now-left">
-            <div className="spotify-now-cover">
-              <img src="/jeffrey.png" alt="Jeffrey Peng" />
-            </div>
-            <div>
-              <p className="spotify-now-title">Now playing</p>
-              <p className="spotify-now-sub">Sleepy Fish, Philanthrope</p>
-            </div>
-            <span className="spotify-now-check" aria-hidden="true">
-              ✓
-            </span>
+            {hasNowPlaying ? (
+              <>
+                <div className="spotify-now-cover">
+                  <img
+                    src={nowPlayingItem?.coverSrc ?? "/jeffrey.png"}
+                    alt={`${nowPlayingItem?.title ?? "Now playing"} cover`}
+                  />
+                </div>
+                <div>
+                  <p className="spotify-now-title">
+                    {nowPlayingItem?.title ?? "Now playing"}
+                  </p>
+                  <p className="spotify-now-sub">
+                    {nowPlayingItem?.subtitle ?? "Sleepy Fish, Philanthrope"}
+                  </p>
+                </div>
+                
+              </>
+            ) : (
+              <>
+                <div
+                  className="spotify-now-cover spotify-now-cover-empty"
+                  aria-hidden="true"
+                />
+                <div className="spotify-now-text-empty" aria-hidden="true" />
+              </>
+            )}
           </div>
           <div className="spotify-now-center">
             <div className="spotify-now-controls">
-              <button type="button" aria-label="Shuffle" className="spotify-icon-button">
+              <button
+                type="button"
+                aria-label="Shuffle"
+                className={`spotify-icon-button ${isShuffling ? "is-active" : ""}`}
+                onClick={toggleShuffle}
+              >
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path
                     d="M16 4h4v4M4 7h6l8 10h2M4 17h6l3-4M18 18v-4h4"
@@ -239,22 +359,49 @@ export default function Home() {
                   />
                 </svg>
               </button>
-              <button type="button" aria-label="Previous" className="spotify-icon-button">
+              <button
+                type="button"
+                aria-label="Previous"
+                className="spotify-icon-button"
+                onClick={prev}
+              >
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M6 5v14M20 6l-10 6 10 6z" fill="currentColor" />
                 </svg>
               </button>
-              <button type="button" className="spotify-now-play-circle">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M8 6l10 6-10 6z" fill="currentColor" />
-                </svg>
+              <button
+                type="button"
+                className="spotify-now-play-circle"
+                onClick={handleGlobalToggle}
+                disabled={!hasNowPlaying}
+              >
+                {isPlaying ? (
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="7" y="6" width="4" height="12" fill="currentColor" />
+                    <rect x="13" y="6" width="4" height="12" fill="currentColor" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 6l10 6-10 6z" fill="currentColor" />
+                  </svg>
+                )}
               </button>
-              <button type="button" aria-label="Next" className="spotify-icon-button">
+              <button
+                type="button"
+                aria-label="Next"
+                className="spotify-icon-button"
+                onClick={next}
+              >
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M18 5v14M4 6l10 6-10 6z" fill="currentColor" />
                 </svg>
               </button>
-              <button type="button" aria-label="Loop" className="spotify-icon-button">
+              <button
+                type="button"
+                aria-label="Loop"
+                className={`spotify-icon-button ${isLooping ? "is-active" : ""}`}
+                onClick={toggleLoop}
+              >
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path
                     d="M7 7h10v4M17 17H7v-4M7 7l-2 2M7 17l-2-2M17 7l2 2M17 17l2-2"
@@ -268,9 +415,18 @@ export default function Home() {
               </button>
             </div>
             <div className="spotify-progress">
-              <span>0:00</span>
-              <div className="spotify-progress-bar" />
-              <span>2:34</span>
+              <span>{formatTime(currentTime)}</span>
+              <div
+                className="spotify-progress-bar"
+                ref={progressRef}
+                onClick={handleSeek}
+                style={{
+                  ["--progress" as string]: duration
+                    ? `${(currentTime / duration) * 100}%`
+                    : "0%",
+                }}
+              />
+              <span>{formatTime(duration)}</span>
             </div>
           </div>
           <div className="spotify-now-volume">
@@ -324,15 +480,16 @@ export default function Home() {
               min={0}
               max={1}
               step={0.01}
-              value={0.6}
+              value={volume}
+              onChange={handleVolumeChange}
               className="spotify-volume-range"
               aria-label="Volume"
-              style={{ ["--volume" as string]: "60%" }}
-              readOnly
+              style={{ ["--volume" as string]: `${volume * 100}%` }}
             />
           </div>
         </footer>
       </main>
+    </div>
     </div>
   );
 }
