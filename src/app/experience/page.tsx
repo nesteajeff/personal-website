@@ -214,7 +214,7 @@ export default function ExperiencePage() {
             <p className="spotify-kicker">Playlist</p>
             <h1>Experience</h1>
             <p className="spotify-meta-line">
-              Jeffrey Peng · 3 songs, 12 min 24 sec
+              Jeffrey Peng · 3 songs, 12 min 21 sec
             </p>
             <button
               type="button"
