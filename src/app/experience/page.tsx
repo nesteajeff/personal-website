@@ -51,9 +51,14 @@ export default function ExperiencePage() {
       experience.map((item, index) => ({
         id: `${item.company}-${index}`,
         title: item.role,
-        subtitle: "Sleepy Fish, Philanthrope",
+        subtitle: item.company,
         coverSrc: item.logo,
-        audioSrc: "/sleepy_fish_away_with_the_fairies.mp3",
+        audioSrc:
+          item.company === "Loblaw Digital"
+            ? "/september_song.mp3"
+            : item.company === "Miovision"
+              ? "/now_we_are_free.mp3"
+              : "/clairo_joanie.mp3",
       })),
     []
   );
@@ -214,9 +219,15 @@ export default function ExperiencePage() {
             <button
               type="button"
               className="spotify-main-play"
-              onClick={() => toggle(queueKey, experienceQueue, 0)}
+              onClick={() =>
+                toggle(
+                  queueKey,
+                  experienceQueue,
+                  isActiveQueue ? currentIndex : 0
+                )
+              }
             >
-              {isActiveQueue && currentIndex === 0 && isPlaying ? "Pause" : "Play"}
+              {isActiveQueue && isPlaying ? "Pause" : "Play"}
             </button>
           </div>
         </header>

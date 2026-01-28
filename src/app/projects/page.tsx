@@ -31,9 +31,12 @@ export default function ProjectsPage() {
       projects.map((item, index) => ({
         id: `${item.title}-${index}`,
         title: item.title,
-        subtitle: "Sleepy Fish, Philanthrope",
+        subtitle: "Personal Project",
         coverSrc: "/jeffrey.png",
-        audioSrc: "/sleepy_fish_away_with_the_fairies.mp3",
+        audioSrc:
+          item.title === "Food Delivery Time Predictor"
+            ? "/first_heartbreak.mp3"
+            : "/sleepy_fish_away_with_the_fairies.mp3",
       })),
     []
   );
@@ -194,9 +197,15 @@ export default function ProjectsPage() {
             <button
               type="button"
               className="spotify-main-play"
-              onClick={() => toggle(queueKey, projectsQueue, 0)}
+              onClick={() =>
+                toggle(
+                  queueKey,
+                  projectsQueue,
+                  isActiveQueue ? currentIndex : 0
+                )
+              }
             >
-              {isActiveQueue && currentIndex === 0 && isPlaying ? "Pause" : "Play"}
+              {isActiveQueue && isPlaying ? "Pause" : "Play"}
             </button>
           </div>
         </header>
