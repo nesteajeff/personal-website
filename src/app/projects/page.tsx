@@ -192,7 +192,7 @@ export default function ProjectsPage() {
             <p className="spotify-kicker">Playlist</p>
             <h1>Projects</h1>
             <p className="spotify-meta-line">
-              Jeffrey Peng · 2 tracks · Data Scientist
+              Jeffrey Peng · 2 songs, 5 min 23 sec
             </p>
             <button
               type="button"
