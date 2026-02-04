@@ -715,9 +715,19 @@ body {
     opacity: 1;
   }
 
+  .spotify-icon-button.is-active img {
+    filter: brightness(0) saturate(100%) invert(53%) sepia(78%)
+      saturate(431%) hue-rotate(86deg) brightness(95%) contrast(90%);
+  }
+
   .spotify-icon-button svg {
-    height: 18px;
-    width: 18px;
+    height: 16px;
+    width: 16px;
+  }
+
+  .spotify-icon-button img {
+    height: 16px;
+    width: 16px;
   }
 
   .spotify-now-play-circle {
@@ -732,9 +742,20 @@ body {
     cursor: pointer;
   }
 
-  .spotify-now-play-circle svg {
-    height: 18px;
-    width: 18px;
+  .spotify-now-play-fill {
+    height: 30px;
+    width: 30px;
+    background: #ffffff;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: #0b0b0b;
+  }
+
+  .spotify-now-play-fill svg,
+  .spotify-now-play-fill img {
+    height: 16px;
+    width: 16px;
   }
 
   .spotify-progress {
