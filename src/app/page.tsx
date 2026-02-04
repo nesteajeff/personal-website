@@ -130,6 +130,18 @@ export default function Home() {
     const seconds = Math.floor(value % 60);
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
+  const getVolumeIcon = (value: number) => {
+    if (value === 0) {
+      return "/volume_off.svg";
+    }
+    if (value <= 0.33) {
+      return "/volume_low.svg";
+    }
+    if (value <= 0.66) {
+      return "/volume_medium.svg";
+    }
+    return "/volume_high.svg";
+  };
 
   return (
     <div className="spotify-layout">
@@ -408,61 +420,32 @@ export default function Home() {
           </div>
           <div className="spotify-now-volume">
             <button type="button" className="spotify-icon-button" aria-label="Lyrics">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  d="M12 3a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V7a4 4 0 0 1 4-4ZM6 21h12"
-                  stroke="currentColor"
-                  strokeWidth="1.7"
-                  fill="none"
-                  strokeLinecap="round"
-                />
-              </svg>
+              <img src="/lyrics.svg" alt="" aria-hidden="true" />
             </button>
             <button type="button" className="spotify-icon-button" aria-label="Queue">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  d="M4 6h16M4 10h16M4 14h10M4 18h10"
-                  stroke="currentColor"
-                  strokeWidth="1.7"
-                  fill="none"
-                  strokeLinecap="round"
-                />
-              </svg>
+              <img src="/queue.svg" alt="" aria-hidden="true" />
             </button>
             <button type="button" className="spotify-icon-button" aria-label="Connect">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  d="M4 8h16v8H4zM8 18h8"
-                  stroke="currentColor"
-                  strokeWidth="1.7"
-                  fill="none"
-                  strokeLinecap="round"
-                />
-              </svg>
+              <img src="/connect.svg" alt="" aria-hidden="true" />
             </button>
             <span className="spotify-volume-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M4 10v4h4l5 4V6l-5 4H4z" fill="currentColor" />
-                <path
-                  d="M16 9c1.2.9 1.6 1.8 1.6 3s-.4 2.1-1.6 3M18.5 7.5c2 1.5 2.5 3 2.5 4.5s-.5 3-2.5 4.5"
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                  fill="none"
-                  strokeLinecap="round"
-                />
-              </svg>
+              <img src={getVolumeIcon(volume)} alt="" aria-hidden="true" />
             </span>
-            <input
-              type="range"
-              min={0}
-              max={1}
-              step={0.01}
-              value={volume}
-              onChange={handleVolumeChange}
-              className="spotify-volume-range"
-              aria-label="Volume"
+            <div
+              className="spotify-volume-slider"
               style={{ ["--volume" as string]: `${volume * 100}%` }}
-            />
+            >
+              <input
+                type="range"
+                min={0}
+                max={1}
+                step={0.01}
+                value={volume}
+                onChange={handleVolumeChange}
+                className="spotify-volume-range"
+                aria-label="Volume"
+              />
+            </div>
           </div>
         </footer>
       </main>
