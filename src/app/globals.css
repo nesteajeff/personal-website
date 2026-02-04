@@ -708,6 +708,7 @@ body {
     display: grid;
     place-items: center;
     opacity: 0.85;
+    position: relative;
   }
 
   .spotify-icon-button.is-active {
@@ -718,6 +719,18 @@ body {
   .spotify-icon-button.is-active img {
     filter: brightness(0) saturate(100%) invert(53%) sepia(78%)
       saturate(431%) hue-rotate(86deg) brightness(95%) contrast(90%);
+  }
+
+  .spotify-icon-button.is-active::after {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    left: 50%;
+    height: 4px;
+    width: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: translateX(-50%);
   }
 
   .spotify-icon-button svg {
@@ -787,23 +800,65 @@ body {
     gap: 12px;
     color: var(--muted);
     font-size: 0.8rem;
+    --volume-accent: var(--foreground);
+    --volume-thumb: transparent;
+  }
+
+  .spotify-now-volume:hover,
+  .spotify-volume-range:active {
+    --volume-accent: var(--accent);
+    --volume-thumb: #ffffff;
+  }
+
+  .spotify-volume-icon {
+    display: grid;
+    place-items: center;
+    height: 18px;
+    width: 18px;
   }
 
   .spotify-volume-icon svg {
     height: 18px;
     width: 18px;
+    display: block;
+  }
+
+  .spotify-volume-icon img {
+    height: 18px;
+    width: 18px;
+    display: block;
+  }
+
+  .spotify-volume-slider {
+    position: relative;
+    width: 120px;
+    height: 6px;
+    border-radius: 999px;
+    background: #2a2a2a;
+  }
+
+  .spotify-volume-slider::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: var(--volume, 60%);
+    background: var(--volume-accent);
+    border-radius: 999px;
+    z-index: 1;
   }
 
   .spotify-volume-range {
     appearance: none;
-    width: 120px;
+    width: 100%;
     height: 6px;
     border-radius: 999px;
-    background: linear-gradient(
-      90deg,
-      var(--accent) var(--volume, 60%),
-      #2a2a2a var(--volume, 60%)
-    );
+    background: transparent;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
   }
 
   .spotify-volume-range::-webkit-slider-thumb {
@@ -811,14 +866,14 @@ body {
     height: 12px;
     width: 12px;
     border-radius: 50%;
-    background: var(--foreground);
+    background: var(--volume-thumb);
   }
 
   .spotify-volume-range::-moz-range-thumb {
     height: 12px;
     width: 12px;
     border-radius: 50%;
-    background: var(--foreground);
+    background: var(--volume-thumb);
     border: none;
   }
 
