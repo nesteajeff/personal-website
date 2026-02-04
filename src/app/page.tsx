@@ -348,16 +348,7 @@ export default function Home() {
                 className={`spotify-icon-button ${isShuffling ? "is-active" : ""}`}
                 onClick={toggleShuffle}
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M16 4h4v4M4 7h6l8 10h2M4 17h6l3-4M18 18v-4h4"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <img src="/shuffle.svg" alt="" aria-hidden="true" />
               </button>
               <button
                 type="button"
@@ -365,9 +356,7 @@ export default function Home() {
                 className="spotify-icon-button"
                 onClick={prev}
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M6 5v14M20 6l-10 6 10 6z" fill="currentColor" />
-                </svg>
+                <img src="/previous.svg" alt="" aria-hidden="true" />
               </button>
               <button
                 type="button"
@@ -376,14 +365,13 @@ export default function Home() {
                 disabled={!hasNowPlaying}
               >
                 {isPlaying ? (
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <rect x="7" y="6" width="4" height="12" fill="currentColor" />
-                    <rect x="13" y="6" width="4" height="12" fill="currentColor" />
-                  </svg>
+                  <span className="spotify-now-play-fill">
+                    <img src="/pause.svg" alt="" aria-hidden="true" />
+                  </span>
                 ) : (
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M8 6l10 6-10 6z" fill="currentColor" />
-                  </svg>
+                  <span className="spotify-now-play-fill">
+                    <img src="/play.svg" alt="" aria-hidden="true" />
+                  </span>
                 )}
               </button>
               <button
@@ -392,9 +380,7 @@ export default function Home() {
                 className="spotify-icon-button"
                 onClick={next}
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M18 5v14M4 6l10 6-10 6z" fill="currentColor" />
-                </svg>
+                <img src="/next.svg" alt="" aria-hidden="true" />
               </button>
               <button
                 type="button"
@@ -402,16 +388,7 @@ export default function Home() {
                 className={`spotify-icon-button ${isLooping ? "is-active" : ""}`}
                 onClick={toggleLoop}
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M7 7h10v4M17 17H7v-4M7 7l-2 2M7 17l-2-2M17 7l2 2M17 17l2-2"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <img src="/loop.svg" alt="" aria-hidden="true" />
               </button>
             </div>
             <div className="spotify-progress">
