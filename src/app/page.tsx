@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import type { ChangeEvent, MouseEvent } from "react";
-import { useMemo, useRef } from "react";
+import type { ChangeEvent } from "react";
+import { useMemo } from "react";
 import { useNowPlaying } from "../components/NowPlayingProvider";
 
 const experience = [
@@ -101,17 +101,11 @@ export default function Home() {
     toggleLoop,
     toggleShuffle,
   } = useNowPlaying();
-  const progressRef = useRef<HTMLDivElement | null>(null);
-  const handleSeek = (event: MouseEvent<HTMLDivElement>) => {
-    if (!duration || !progressRef.current) {
+  const handleSeekChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!duration) {
       return;
     }
-    const rect = progressRef.current.getBoundingClientRect();
-    const percent = Math.min(
-      Math.max((event.clientX - rect.left) / rect.width, 0),
-      1
-    );
-    seekTo(percent * duration);
+    seekTo(Number(event.target.value));
   };
   const handleVolumeChange = (event: ChangeEvent<HTMLInputElement>) => {
     setVolume(Number(event.target.value));
@@ -411,14 +405,23 @@ export default function Home() {
               <span>{formatTime(currentTime)}</span>
               <div
                 className="spotify-progress-bar"
-                ref={progressRef}
-                onClick={handleSeek}
                 style={{
                   ["--progress" as string]: duration
                     ? `${(currentTime / duration) * 100}%`
                     : "0%",
                 }}
-              />
+              >
+                <input
+                  type="range"
+                  min={0}
+                  max={duration || 0}
+                  step={0.01}
+                  value={duration ? currentTime : 0}
+                  onChange={handleSeekChange}
+                  className="spotify-progress-range"
+                  aria-label="Seek"
+                />
+              </div>
               <span>{formatTime(duration)}</span>
             </div>
           </div>
