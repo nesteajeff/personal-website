@@ -270,20 +270,24 @@ export default function Home() {
         <section className="spotify-section">
           <h2 className="spotify-section-title">Playlists</h2>
           <div className="spotify-playlists">
-            <Link className="spotify-playlist-card" href="/experience">
+            <div className="spotify-playlist-card">
               <div>
                 <h3>Experience</h3>
                 <p>3 tracks</p>
               </div>
-              <span className="spotify-play">Play</span>
-            </Link>
-            <Link className="spotify-playlist-card" href="/projects">
+              <Link className="spotify-play" href="/experience">
+                Play
+              </Link>
+            </div>
+            <div className="spotify-playlist-card">
               <div>
                 <h3>Projects</h3>
                 <p>2 tracks</p>
               </div>
-              <span className="spotify-play">Play</span>
-            </Link>
+              <Link className="spotify-play" href="/projects">
+                Play
+              </Link>
+            </div>
           </div>
         </section>
 
@@ -446,6 +450,12 @@ export default function Home() {
                 aria-label="Volume"
               />
             </div>
+            <button type="button" className="spotify-icon-button" aria-label="Mini player">
+              <img src="/miniplayer.svg" alt="" aria-hidden="true" />
+            </button>
+            <button type="button" className="spotify-icon-button" aria-label="Fullscreen">
+              <img src="/fullscreen.svg" alt="" aria-hidden="true" />
+            </button>
           </div>
         </footer>
       </main>

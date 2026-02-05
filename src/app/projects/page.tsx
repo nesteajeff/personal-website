@@ -382,6 +382,12 @@ export default function ProjectsPage() {
                 aria-label="Volume"
               />
             </div>
+            <button type="button" className="spotify-icon-button" aria-label="Mini player">
+              <img src="/miniplayer.svg" alt="" aria-hidden="true" />
+            </button>
+            <button type="button" className="spotify-icon-button" aria-label="Fullscreen">
+              <img src="/fullscreen.svg" alt="" aria-hidden="true" />
+            </button>
           </div>
         </footer>
       </main>
