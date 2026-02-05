@@ -12,8 +12,7 @@ const projects = [
     link: "https://habitstracker.ca",
     bullets: [
       "Built a full-stack habit tracking application using Next.js, TypeScript, Express.js, and PostgreSQL, supporting habit creation, daily check-ins, streak calculation, and goal management.",
-      "Developed a Next.js frontend that interacts with a RESTful Express API, handling form submissions, state updates, and real-time UI refreshes after habit check-ins and goal updates.",
-      "Deployed the system end-to-end on AWS (RDS, Elastic Beanstalk, Amplify), resolving real-world issues around environment configuration, HTTPS, CORS, and cross-service integration; added unit and end-to-end tests with Jest and Cypress.",
+      "Deployed the system end-to-end on AWS (RDS, Elastic Beanstalk, Amplify), configuring environment variables, API endpoints, and database connections across services; added unit and end-to-end tests with Jest and Cypress",
     ],
   },
   {
