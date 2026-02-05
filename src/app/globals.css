@@ -4,7 +4,7 @@
   --background: #121212;
   --foreground: #ffffff;
   --card: #181818;
-  --muted: #b3b3b3;
+  --muted: #d0d0d0;
   --accent: #1db954;
   --accent-strong: #1ed760;
   --ring: rgba(29, 185, 84, 0.35);
@@ -529,7 +529,7 @@ body {
 
   .spotify-kicker {
     margin: 0 0 8px;
-    text-transform: uppercase;
+    text-transform: none;
     letter-spacing: 0.2em;
     font-size: 0.75rem;
     color: var(--muted);
@@ -568,9 +568,16 @@ body {
     gap: 16px;
     padding: 0 16px;
     color: var(--muted);
-    text-transform: uppercase;
+    text-transform: none;
     letter-spacing: 0.18em;
     font-size: 0.7rem;
+    align-items: center;
+  }
+
+  .spotify-track-head img {
+    height: 12px;
+    width: 12px;
+    display: block;
   }
 
   .spotify-track {
@@ -716,9 +723,26 @@ body {
     opacity: 1;
   }
 
+  .spotify-now-controls .spotify-icon-button img,
+  .spotify-now-volume .spotify-icon-button img {
+    opacity: 0.82;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+
+  .spotify-now-controls .spotify-icon-button:hover img,
+  .spotify-now-volume .spotify-icon-button:hover img {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
   .spotify-icon-button.is-active img {
     filter: brightness(0) saturate(100%) invert(53%) sepia(78%)
       saturate(431%) hue-rotate(86deg) brightness(95%) contrast(90%);
+    opacity: 1;
+  }
+
+  .spotify-icon-button.is-active:hover img {
+    transform: scale(1.05);
   }
 
   .spotify-icon-button.is-active::after {
@@ -771,6 +795,14 @@ body {
     width: 16px;
   }
 
+  .spotify-now-play-circle .spotify-now-play-fill {
+    transition: transform 0.15s ease;
+  }
+
+  .spotify-now-play-circle:hover .spotify-now-play-fill {
+    transform: scale(1.05);
+  }
+
   .spotify-progress {
     display: flex;
     align-items: center;
@@ -785,12 +817,38 @@ body {
     flex: 1;
     min-width: 0;
     border-radius: 999px;
-    background: linear-gradient(
-      90deg,
-      var(--accent) var(--progress, 0%),
-      #2a2a2a var(--progress, 0%)
-    );
+    background: #2a2a2a;
+    position: relative;
+    --progress-accent: var(--foreground);
+    --progress-thumb: transparent;
     cursor: pointer;
+  }
+
+  .spotify-progress-bar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: var(--progress, 0%);
+    background: var(--progress-accent);
+    border-radius: 999px;
+  }
+
+  .spotify-progress-bar::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: var(--progress, 0%);
+    transform: translate(-50%, -50%);
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background: var(--progress-thumb);
+  }
+
+  .spotify-progress-bar:hover,
+  .spotify-progress-bar:active {
+    --progress-accent: var(--accent);
+    --progress-thumb: #ffffff;
   }
 
   .spotify-now-volume {
