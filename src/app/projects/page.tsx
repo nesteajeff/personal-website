@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import type { ChangeEvent } from "react";
-import { useMemo } from "react";
+import type { ChangeEvent, MouseEvent } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useNowPlaying } from "../../components/NowPlayingProvider";
 
 const projects = [
@@ -65,6 +65,13 @@ export default function ProjectsPage() {
     }
     seekTo(Number(event.target.value));
   };
+  const suppressTooltip = (event: MouseEvent<HTMLButtonElement>) => {
+    event.currentTarget.dataset.tooltipSuppressed = "true";
+  };
+  const handleTooltipMouseLeave = (event: MouseEvent<HTMLButtonElement>) => {
+    event.currentTarget.blur();
+    delete event.currentTarget.dataset.tooltipSuppressed;
+  };
 
   const handleVolumeChange = (event: ChangeEvent<HTMLInputElement>) => {
     setVolume(Number(event.target.value));
@@ -96,6 +103,20 @@ export default function ProjectsPage() {
       return "/volume_medium.svg";
     }
     return "/volume_high.svg";
+  };
+  const lastVolumeRef = useRef(volume || 1);
+  useEffect(() => {
+    if (volume > 0) {
+      lastVolumeRef.current = volume;
+    }
+  }, [volume]);
+  const handleToggleMute = () => {
+    if (volume === 0) {
+      setVolume(lastVolumeRef.current || 1);
+      return;
+    }
+    lastVolumeRef.current = volume;
+    setVolume(0);
   };
 
   return (
@@ -285,25 +306,40 @@ export default function ProjectsPage() {
               <button
                 type="button"
                 aria-label="Shuffle"
-                className={`spotify-icon-button ${
+                className={`spotify-icon-button spotify-has-tooltip ${
                   isShuffling ? "is-active" : ""
                 }`}
-                onClick={toggleShuffle}
+                data-tooltip={isShuffling ? "Disable shuffle" : "Enable shuffle"}
+                onClick={(event) => {
+                  toggleShuffle();
+                  suppressTooltip(event);
+                }}
+                onMouseLeave={handleTooltipMouseLeave}
               >
                 <img src="/shuffle.svg" alt="" aria-hidden="true" />
               </button>
               <button
                 type="button"
                 aria-label="Previous"
-                className="spotify-icon-button"
-                onClick={prev}
+                className="spotify-icon-button spotify-has-tooltip"
+                data-tooltip="Previous"
+                onClick={(event) => {
+                  prev();
+                  suppressTooltip(event);
+                }}
+                onMouseLeave={handleTooltipMouseLeave}
               >
                 <img src="/previous.svg" alt="" aria-hidden="true" />
               </button>
               <button
                 type="button"
-                className="spotify-now-play-circle"
-                onClick={handleGlobalToggle}
+                className="spotify-now-play-circle spotify-has-tooltip"
+                data-tooltip={isPlaying ? "Pause" : "Play"}
+                onClick={(event) => {
+                  handleGlobalToggle();
+                  suppressTooltip(event);
+                }}
+                onMouseLeave={handleTooltipMouseLeave}
                 disabled={!hasNowPlaying}
               >
                 {isPlaying ? (
@@ -319,16 +355,28 @@ export default function ProjectsPage() {
               <button
                 type="button"
                 aria-label="Next"
-                className="spotify-icon-button"
-                onClick={next}
+                className="spotify-icon-button spotify-has-tooltip"
+                data-tooltip="Next"
+                onClick={(event) => {
+                  next();
+                  suppressTooltip(event);
+                }}
+                onMouseLeave={handleTooltipMouseLeave}
               >
                 <img src="/next.svg" alt="" aria-hidden="true" />
               </button>
               <button
                 type="button"
                 aria-label="Loop"
-                className={`spotify-icon-button ${isLooping ? "is-active" : ""}`}
-                onClick={toggleLoop}
+                className={`spotify-icon-button spotify-has-tooltip ${
+                  isLooping ? "is-active" : ""
+                }`}
+                data-tooltip={isLooping ? "Disable repeat" : "Enable repeat"}
+                onClick={(event) => {
+                  toggleLoop();
+                  suppressTooltip(event);
+                }}
+                onMouseLeave={handleTooltipMouseLeave}
               >
                 <img src="/loop.svg" alt="" aria-hidden="true" />
               </button>
@@ -358,18 +406,45 @@ export default function ProjectsPage() {
             </div>
           </div>
           <div className="spotify-now-volume">
-            <button type="button" className="spotify-icon-button" aria-label="Lyrics">
+            <button
+              type="button"
+              className="spotify-icon-button spotify-has-tooltip"
+              aria-label="Lyrics"
+              data-tooltip="Coming soon..."
+            >
               <img src="/lyrics.svg" alt="" aria-hidden="true" />
             </button>
-            <button type="button" className="spotify-icon-button" aria-label="Queue">
+            <button
+              type="button"
+              className="spotify-icon-button spotify-has-tooltip"
+              aria-label="Queue"
+              data-tooltip="Also coming soon..."
+            >
               <img src="/queue.svg" alt="" aria-hidden="true" />
             </button>
-            <button type="button" className="spotify-icon-button" aria-label="Connect">
+            <button
+              type="button"
+              className="spotify-icon-button spotify-has-tooltip"
+              aria-label="Connect"
+              data-tooltip="Does nothing..."
+            >
               <img src="/connect.svg" alt="" aria-hidden="true" />
             </button>
-            <span className="spotify-volume-icon" aria-hidden="true">
-              <img src={getVolumeIcon(volume)} alt="" aria-hidden="true" />
-            </span>
+            <button
+              type="button"
+              className="spotify-icon-button spotify-has-tooltip"
+              aria-label={volume === 0 ? "Unmute" : "Mute"}
+              data-tooltip={volume === 0 ? "Unmute" : "Mute"}
+              onClick={(event) => {
+                handleToggleMute();
+                suppressTooltip(event);
+              }}
+              onMouseLeave={handleTooltipMouseLeave}
+            >
+              <span className="spotify-volume-icon" aria-hidden="true">
+                <img src={getVolumeIcon(volume)} alt="" aria-hidden="true" />
+              </span>
+            </button>
             <div
               className="spotify-volume-slider"
               style={{
@@ -387,10 +462,20 @@ export default function ProjectsPage() {
                 aria-label="Volume"
               />
             </div>
-            <button type="button" className="spotify-icon-button" aria-label="Mini player">
+            <button
+              type="button"
+              className="spotify-icon-button spotify-has-tooltip"
+              aria-label="Mini player"
+              data-tooltip="Also does nothing..."
+            >
               <img src="/miniplayer.svg" alt="" aria-hidden="true" />
             </button>
-            <button type="button" className="spotify-icon-button" aria-label="Fullscreen">
+            <button
+              type="button"
+              className="spotify-icon-button spotify-has-tooltip"
+              aria-label="Fullscreen"
+              data-tooltip="Still does nothing..."
+            >
               <img src="/fullscreen.svg" alt="" aria-hidden="true" />
             </button>
           </div>
