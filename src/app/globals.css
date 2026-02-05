@@ -564,19 +564,19 @@ body {
 
   .spotify-track-head {
     display: grid;
-    grid-template-columns: 32px 1fr auto;
+    grid-template-columns: 38px 1fr auto;
     gap: 16px;
     padding: 0 16px;
     color: var(--muted);
     text-transform: none;
-    letter-spacing: 0.18em;
-    font-size: 0.7rem;
+    letter-spacing: 0.17em;
+    font-size: 0.9rem;
     align-items: center;
   }
 
   .spotify-track-head img {
-    height: 12px;
-    width: 12px;
+    height: 16px;
+    width: 16px;
     display: block;
   }
 
