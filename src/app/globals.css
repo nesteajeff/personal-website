@@ -499,7 +499,7 @@ body {
 
   .spotify-playlist-hero {
     display: grid;
-    grid-template-columns: 180px 1fr;
+    grid-template-columns: 220px 1fr;
     gap: 24px;
     align-items: end;
     padding: 40px 0 24px;
@@ -511,8 +511,8 @@ body {
   }
 
   .spotify-playlist-art {
-    height: 180px;
-    width: 180px;
+    height: 220px;
+    width: 220px;
     border-radius: 12px;
     background: #0f0f0f;
     box-shadow: 0 28px 60px rgba(0, 0, 0, 0.45);
@@ -528,7 +528,7 @@ body {
   }
 
   .spotify-kicker {
-    margin: 0 0 8px;
+    margin: 0 0 2px;
     text-transform: none;
     letter-spacing: 0.2em;
     font-size: 0.75rem;
@@ -536,12 +536,12 @@ body {
   }
 
   .spotify-sub {
-    margin: 6px 0 0;
+    margin: 4px 0 0;
     color: var(--muted);
   }
 
   .spotify-meta-line {
-    margin: 10px 0 0;
+    margin: 2px 0 0;
     color: var(--muted);
     font-size: 0.85rem;
   }
