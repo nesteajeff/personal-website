@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Jeffrey Peng | Data Scientist",
+  title: "Jeffrey Peng | Data Scientist & Software Engineer",
   description:
     "Spotify-themed portfolio featuring projects, experience, and contact details.",
   icons: {

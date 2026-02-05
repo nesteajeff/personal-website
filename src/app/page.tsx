@@ -262,7 +262,7 @@ export default function Home() {
                 Jeffrey <span className="spotify-hero-highlight">Peng</span>
               </h1>
               <p className="spotify-lede spotify-hero-subtitle">
-                Data Scientist
+                Data Scientist & Software Engineer
               </p>
             </div>
             <div className="spotify-contact-block">
