@@ -9,6 +9,7 @@ const projects = [
   {
     title: "Habit Tracker",
     time: "February 2026",
+    link: "https://habitstracker.ca",
     bullets: [
       "Built a full-stack habit tracking application using Next.js, TypeScript, Express.js, and PostgreSQL, supporting habit creation, daily check-ins, streak calculation, and goal management.",
       "Developed a Next.js frontend that interacts with a RESTful Express API, handling form submissions, state updates, and real-time UI refreshes after habit check-ins and goal updates.",
@@ -264,6 +265,16 @@ export default function ProjectsPage() {
               </span>
               <div>
                 <h3>{project.title}</h3>
+                {project.link ? (
+                  <a
+                    className="spotify-project-link"
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    habitstracker.ca
+                  </a>
+                ) : null}
                 <ul className="spotify-bullets">
                   {project.bullets.map((bullet) => (
                     <li key={bullet}>{bullet}</li>

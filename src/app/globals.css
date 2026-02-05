@@ -617,6 +617,18 @@ body {
     letter-spacing: 0.14em;
   }
 
+  .spotify-project-link {
+    display: inline-flex;
+    margin: 4px 0 0;
+    color: var(--accent-strong);
+    text-decoration: none;
+    font-size: 0.85rem;
+  }
+
+  .spotify-project-link:hover {
+    text-decoration: underline;
+  }
+
   .spotify-now-playing {
     margin-top: 24px;
     background: #181818;
