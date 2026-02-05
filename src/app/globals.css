@@ -508,6 +508,7 @@ body {
   .spotify-playlist-hero h1 {
     margin: 0;
     font-size: clamp(2.6rem, 4.5vw, 3.6rem);
+    font-weight: 700;
   }
 
   .spotify-playlist-art {
@@ -532,7 +533,7 @@ body {
     text-transform: none;
     letter-spacing: 0.2em;
     font-size: 0.75rem;
-    color: var(--muted);
+    color: var(--foreground);
   }
 
   .spotify-sub {
@@ -544,6 +545,10 @@ body {
     margin: 2px 0 0;
     color: var(--muted);
     font-size: 0.85rem;
+  }
+
+  .spotify-meta-name {
+    color: var(--foreground);
   }
 
   .spotify-main-play {

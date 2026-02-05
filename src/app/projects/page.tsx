@@ -204,7 +204,8 @@ export default function ProjectsPage() {
             <p className="spotify-kicker">Public Playlist</p>
             <h1>Projects</h1>
             <p className="spotify-meta-line">
-              Jeffrey Peng · 2 songs, 5 min 23 sec
+              <span className="spotify-meta-name">Jeffrey Peng</span> · 2 songs, 5
+              min 23 sec
             </p>
             <button
               type="button"
