@@ -49,7 +49,9 @@ export default function ProjectsPage() {
         audioSrc:
           item.title === "Food Delivery Time Predictor"
             ? "/first_heartbreak.mp3"
-            : "/sleepy_fish_away_with_the_fairies.mp3",
+            : item.title === "Habit Tracker"
+              ? "/motion_peter.mp3"
+              : "/sleepy_fish_away_with_the_fairies.mp3",
       })),
     []
   );
