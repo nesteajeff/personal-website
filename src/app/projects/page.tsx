@@ -201,7 +201,7 @@ export default function ProjectsPage() {
             <img src="/jeffrey.png" alt="Jeffrey Peng" />
           </div>
           <div>
-            <p className="spotify-kicker">Playlist</p>
+            <p className="spotify-kicker">Public Playlist</p>
             <h1>Projects</h1>
             <p className="spotify-meta-line">
               Jeffrey Peng · 2 songs, 5 min 23 sec
@@ -226,12 +226,14 @@ export default function ProjectsPage() {
           <div className="spotify-track-head">
             <span>#</span>
             <span>Title</span>
-            <span>Time</span>
+            <span>
+              <img src="/duration.svg" alt="Duration" />
+            </span>
           </div>
           {projects.map((project, index) => (
             <article key={project.title} className="spotify-track">
               <span className="spotify-track-index">
-                {(index + 1).toString().padStart(2, "0")}
+                {index + 1}
               </span>
               <div>
                 <h3>{project.title}</h3>

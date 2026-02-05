@@ -223,7 +223,7 @@ export default function ExperiencePage() {
             <img src="/jeffrey.png" alt="Jeffrey Peng" />
           </div>
           <div>
-            <p className="spotify-kicker">Playlist</p>
+            <p className="spotify-kicker">Public Playlist</p>
             <h1>Experience</h1>
             <p className="spotify-meta-line">
               Jeffrey Peng · 3 songs, 12 min 21 sec
@@ -248,12 +248,14 @@ export default function ExperiencePage() {
           <div className="spotify-track-head">
             <span>#</span>
             <span>Title</span>
-            <span>Time</span>
+            <span>
+              <img src="/duration.svg" alt="Duration" />
+            </span>
           </div>
           {experience.map((item, index) => (
             <article key={`${item.role}-${item.company}`} className="spotify-track">
               <span className="spotify-track-index">
-                {(index + 1).toString().padStart(2, "0")}
+                {index + 1}
               </span>
               <div>
                 <h3>{item.role}</h3>
