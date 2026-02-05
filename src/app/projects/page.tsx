@@ -7,6 +7,15 @@ import { useNowPlaying } from "../../components/NowPlayingProvider";
 
 const projects = [
   {
+    title: "Habit Tracker",
+    time: "February 2026",
+    bullets: [
+      "Built a full-stack habit tracking application using Next.js, TypeScript, Express.js, and PostgreSQL, supporting habit creation, daily check-ins, streak calculation, and goal management.",
+      "Developed a Next.js frontend that interacts with a RESTful Express API, handling form submissions, state updates, and real-time UI refreshes after habit check-ins and goal updates.",
+      "Deployed the system end-to-end on AWS (RDS, Elastic Beanstalk, Amplify), resolving real-world issues around environment configuration, HTTPS, CORS, and cross-service integration; added unit and end-to-end tests with Jest and Cypress.",
+    ],
+  },
+  {
     title: "Food Delivery Time Predictor",
     time: "January 2024",
     bullets: [
@@ -32,7 +41,10 @@ export default function ProjectsPage() {
         id: `${item.title}-${index}`,
         title: item.title,
         subtitle: "Personal Project",
-        coverSrc: "/jeffrey.png",
+        coverSrc:
+          item.title === "Habit Tracker"
+            ? "/habits_tracker_logo.png"
+            : "/jeffrey.png",
         audioSrc:
           item.title === "Food Delivery Time Predictor"
             ? "/first_heartbreak.mp3"
