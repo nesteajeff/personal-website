@@ -1,3 +1,3 @@
 ## Personal Website
 
-🔗 **Live Site:** [Personal Website](https://jeffreypeng.com)
+🌐 **Live Site:** https://jeffreypeng.com
