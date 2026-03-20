@@ -262,12 +262,12 @@ export default function Home() {
                 Jeffrey <span className="spotify-hero-highlight">Peng</span>
               </h1>
               <p className="spotify-lede spotify-hero-subtitle">
-                Data Scientist & Software Engineer
+                Software Engineer
               </p>
             </div>
             <div className="spotify-contact-block">
               <p>University of Waterloo</p>
-              <p>Seeking Summer 2026 Internships</p>
+              <p>Seeking Fall 2026 Internships</p>
               <a href="mailto:jeffrey.peng@uwaterloo.ca">
                 jeffrey.peng@uwaterloo.ca
               </a>
@@ -297,7 +297,7 @@ export default function Home() {
             <div className="spotify-playlist-card">
               <div>
                 <h3>Projects</h3>
-                <p>2 tracks</p>
+                <p>3 tracks</p>
               </div>
               <Link className="spotify-play" href="/projects">
                 Play
@@ -321,7 +321,7 @@ export default function Home() {
         <section className="spotify-section">
           <h2 className="spotify-section-title">Contact</h2>
           <div className="spotify-contact-card">
-            <p>Seeking Summer 2026 Internships · Let&apos;s connect!</p>
+            <p>Seeking Fall 2026 Internships · Let&apos;s connect!</p>
             <div className="spotify-actions">
               <a
                 className="spotify-button spotify-button-primary"
